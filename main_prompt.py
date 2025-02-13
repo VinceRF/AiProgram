@@ -28,7 +28,7 @@ def send_message(event=None):  # 엔터 키로 이벤트 처리
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=message_log,
-        temperature=0.5
+        temperature=0.1
     )
 
     # 로딩 팝업 닫기
@@ -46,12 +46,21 @@ def send_message(event=None):  # 엔터 키로 이벤트 처리
 
 # GUI 설정
 root = tk.Tk()
-root.title("OpenAI Chatbot")
+root.title("GPT Powered DJ")
 root.geometry("1000x1000")
 root.minsize(1000, 1000)  # 최소 창 크기 설정
 root.option_add("*Font", ("맑은 고딕", 12))
 
-message_log = [{"role": "system", "content": "You are a helpful assistant."}]
+message_log = [
+    {
+        "role": "system",
+        "content": '''
+    You are a DJ assistant who creates playlists. Your user will be Korean, so communicate in Korean, but you must not translate artists' names and song titles into Korean.
+        - When you show a playlist, it must contains the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist like this: "이 플레이리스트를 CSV로 저장하시겠습니까?"
+        - If they want to save the playlist into CSV, show the playlist with a header in CSV format, separated by ';' and the release year format should be 'YYYY'. The CSV format must start with a new line. The header of the CSV file must be in English and it should be formatted as follows: 'Title;Artist;Released'.
+    '''
+    }
+]
 
 # 채팅창
 chat_display = scrolledtext.ScrolledText(root, wrap=tk.WORD, font=("맑은 고딕", 12), spacing1=5, spacing2=5, spacing3=5,
